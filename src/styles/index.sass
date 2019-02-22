@@ -1,0 +1,63 @@
+$font-color: hsl(294, 100%, 96%);
+$dark-blue: hsl(204, 73%, 19%);
+$light-blue: hsl(208, 46%, 40%);
+$dark-purple: hsl(257, 30%, 27%);
+$medium-purple: hsl(294, 18%, 43%);
+$ligh-purplue: hsl(289, 14%, 59%);
+    
+body
+    background-image: linear-gradient(to top right, $dark-blue, $medium-purple)
+    width: 100vw
+    height: 100vh
+    font-family: 'Quicksand', sans-serif
+    color: $font-color
+
+#main-div 
+    margin-top: 30vh
+
+h1
+    text-align: center
+    letter-spacing: .25rem
+
+#quote-box 
+    width: 70vw
+    min-height: 30vh
+    margin: auto
+    letter-spacing: .1rem
+
+#text 
+    text-align: center
+    box-sizing: border-box
+    padding: 10px
+
+#author
+    text-align: right
+    padding: 10px
+
+#new-quote
+    color: inherit
+    font: inherit
+    letter-spacing: inherit
+    border: 1px solid $font-color
+    background: none
+    padding: 10px
+    margin: 10px
+    border-radius: 10px
+    transition: all 0.5s ease
+
+
+@media screen and (min-width: 800px) 
+    #new-quote:hover 
+        background-color: $font-color
+        color: $medium-purple
+
+    #quote-box
+        width: 70vw
+
+@media screen and (min-width: 1000px)
+    #quote-box
+        width: 60vw
+
+@media screen and (min-width: 1200px)
+    #quote-box
+        width: 50vw
