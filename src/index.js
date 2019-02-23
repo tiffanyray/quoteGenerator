@@ -18,7 +18,7 @@ class QuoteBox extends React.Component {
     .then(response => response.json())
     .then(data => {
       this.setState({
-        content: data[0].content.replace(/(<([^>]+)>)/ig,"").replace(/&#8217?;/ig, "'").replace(/&#8220;/ig, '"').replace(/$#8221;/ig, '"'),
+        content: data[0].content.replace(/(<([^>]+)>)/ig,"").replace(/&#8217?;/ig, "'").replace(/&#8220;/ig, '"').replace(/$#8221;/ig, '"').replace(/&#8217;/ig, '-'),
         title: data[0].title
       })
     })
@@ -40,7 +40,7 @@ class QuoteBox extends React.Component {
         if (data[0].content && data[0].title) {
           console.log(data);
           this.setState({
-            content: data[0].content.replace(/(<([^>]+)>)/ig,"").replace(/&#8217?;/ig, "'"),
+            content: data[0].content.replace(/(<([^>]+)>)/ig,"").replace(/&#8217?;/ig, "'").replace(/&#8220;/ig, '"').replace(/$#8221;/ig, '"').replace(/&#8217;/ig, '-'),
             title: data[0].title
           })
         } else {
