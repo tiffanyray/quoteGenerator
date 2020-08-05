@@ -1,69 +1,87 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './styles/index.sass';
-
+import React from "react";
+import ReactDOM from "react-dom";
+import "./styles/index.sass";
 
 class QuoteBox extends React.Component {
+  getRandomNumber(min, max) {
+    min = Math.ceil(104);
+    max = Math.floor(2568);
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+
+  // apiURL = `https://quotesondesign.com/wp-json/wp/v2/posts/?orderby=rand&_=${this.getRandomNumber()}`
+
   constructor(props) {
     super(props);
     this.state = {
-      content: '',
-      title: ''
+      content: "",
+      title: "",
     };
     this.getRandomQuote = this.getRandomQuote.bind(this);
-  } 
+  }
 
   componentDidMount() {
-    fetch("https://quotesondesign.com/wp-json/posts?filter[orderby]=rand&filter[posts_per_page]=1")
-    .then(response => response.json())
-    .then(data => {
-      this.setState({
-        content: data[0].content.replace(/(<([^>]+)>)/ig,"").replace(/&#8217?;/ig, "'").replace(/&#8220;/ig, '"').replace(/$#8221;/ig, '"').replace(/&#8217;/ig, '-'),
-        title: data[0].title
-      })
-    })
-  } 
+    this.getRandomQuote();
+  }
 
   getRandomQuote() {
-
-    $.ajax({
-      type: 'GET',
-      url: "https://quotesondesign.com/wp-json/posts?filter[orderby]=rand&filter[posts_per_page]=1",
-      xhrFields: {
-        withCredentials: false
-      },
-      crossDomain: true,
-      dataType: 'json',
-      async: true,
-    //Have to use arrow function in order to bind this kw to getRandomQuote
-      success: ( data ) => {
-        if (data[0].content && data[0].title) {
-          console.log(data);
-          this.setState({
-            content: data[0].content.replace(/(<([^>]+)>)/ig,"").replace(/&#8217?;/ig, "'").replace(/&#8220;/ig, '"').replace(/$#8221;/ig, '"').replace(/&#8217;/ig, '-'),
-            title: data[0].title
-          })
+    fetch(
+      `https://quotesondesign.com/wp-json/wp/v2/posts/?orderby=rand&_=${this.getRandomNumber()}`
+    )
+      .then((response) => {
+        console.log("response", response.status);
+        if (response.status == 200) {
+          console.log("status === 200 true");
+          return response.json();
         } else {
-          return console.error('No quote found');
+          throw error;
         }
-      },
-      cache: false
-    } );
+      })
+      .then((data) => {
+        console.log("data", data);
+        const howToReplace = (match, string, p1, p2, p3) => {
+          console.log("howToReplace::", match, string);
+          let parser = new DOMParser();
+          console.log("match", match.normalize());
+          return "HERE";
+        };
+
+        let parser = new DOMParser();
+
+        this.setState({
+          content: data[0].content.rendered,
+          title: data[0].title.rendered,
+        });
+      })
+      .catch((error) => {
+        console.error(
+          "There was an error with the API. Please try again later.",
+          error
+        );
+      });
   }
 
   render() {
+    console.log("state content", this.state.content);
     return (
       <div id="main-div">
         <h1>Random Quote</h1>
         <div id="quote-box">
-          <div id="text">"{this.state.content}"</div>
-          <div id="author">- {this.state.title}</div>
-          <button id="new-quote" onClick={this.getRandomQuote}>New Quote</button>
-          <a id="tweet-quote"></a>
+          <div
+            id="text"
+            dangerouslySetInnerHTML={{ __html: this.state.content }}
+          />
+          <div
+            id="author"
+            dangerouslySetInnerHTML={{ __html: `- ${this.state.title}` }}
+          />
+          <button id="new-quote" onClick={this.getRandomQuote}>
+            New Quote
+          </button>
         </div>
       </div>
-    )
+    );
   }
 }
 
-ReactDOM.render(<QuoteBox />, document.getElementById('root'));
+ReactDOM.render(<QuoteBox />, document.getElementById("root"));
